@@ -3,6 +3,13 @@ import { useState, useEffect } from 'react'
 
 const hours = Array.from({ length: 18 }, (_, i) => `${6 + i}:00`)
 
+// Format tanggal → WIB (UTC+7)
+function formatDateToLocal(date) {
+    const offsetMs = 7 * 60 * 60 * 1000 // +7 jam GMT+7
+    const localDate = new Date(date.getTime() + offsetMs)
+    return localDate.toISOString().slice(0, 10)
+}
+
 export default function TimeSlots({ date }) {
     const [showDetails, setShowDetails] = useState(false)
     const [selectedHours, setSelectedHours] = useState([])
@@ -11,7 +18,7 @@ export default function TimeSlots({ date }) {
     const [bookings, setBookings] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const dateStr = date.toISOString().split('T')[0]
+    const dateStr = formatDateToLocal(date)
 
     useEffect(() => {
         const params = new URLSearchParams(window.location.search)

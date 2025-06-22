@@ -2,12 +2,14 @@ import prisma from '@/app/lib/prisma'
 
 const SECRET_KEY = 'LotusKey'
 
+// Format tanggal → WIB (UTC+7)
 function formatDateToLocal(date) {
     const offsetMs = 7 * 60 * 60 * 1000 // +7 jam GMT+7
     const localDate = new Date(date.getTime() + offsetMs)
     return localDate.toISOString().slice(0, 10)
 }
 
+// Buat array tanggal dari baseDate, startOffset sampai endOffset (positif = hari ke depan)
 function getDateRange(baseDate, startOffset, endOffset) {
     const result = []
     for (let i = startOffset; i <= endOffset; i++) {
@@ -31,12 +33,14 @@ export async function POST(request) {
     }
 
     const today = new Date()
-    const allowedWithSecret = getDateRange(today, 3, 7)
-    const allowedWithoutSecret = getDateRange(today, 1, 2)
-
     const bookingDateStr = formatDateToLocal(bookingDate)
 
+    const allowedWithSecret = getDateRange(today, 3, 7)     // 3 - 7 hari setelah hari ini → Dengan kunci
+    const allowedWithoutSecret = getDateRange(today, 1, 2)  // 1 - 2 hari setelah hari ini → Tanpa kunci
+
     if (secret === SECRET_KEY) {
+        console.log(allowedWithSecret)
+        console.log(bookingDateStr)
         if (!allowedWithSecret.includes(bookingDateStr)) {
             return Response.json(
                 { error: `Dengan kunci, hanya bisa booking tanggal: ${allowedWithSecret.join(', ')}` },
@@ -86,9 +90,14 @@ export async function GET(request) {
     const date = searchParams.get('date')
     if (!date) return Response.json({ error: 'Parameter date wajib' }, { status: 400 })
 
+    const key = searchParams.get('key')
+    const showSensitive = key === SECRET_KEY
+
     const bookings = await prisma.booking.findMany({
         where: { date },
-        select: { hour: true, name: true, address: true, olahraga: true },
+        select: showSensitive
+            ? { hour: true, name: true, address: true, olahraga: true }
+            : { hour: true, olahraga: true }, // Tanpa nama/alamat jika tanpa key
     })
 
     return Response.json({ bookings })
