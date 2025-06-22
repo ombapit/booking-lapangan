@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-2 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col row-start-2 items-center w-full items-center">
-        <h1 className='text-2xl font-bold'>Booking Lapangan Basket/Tenis</h1>
+        <h1 className='font-bold'>Booking Lapangan Basket/Tenis</h1>
         <h2 className='font-semibold'>Lotus Palace - PIK</h2>
 
         <div className="flex gap-4 items-center flex-col mt-6">

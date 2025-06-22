@@ -33,7 +33,10 @@ export default function TimeSlots({ date }) {
     }, [dateStr])
 
     const fetchBookings = async () => {
-        const res = await fetch(`/api/bookings?date=${dateStr}`)
+        const params = new URLSearchParams(window.location.search)
+        const key = params.get('key')
+
+        const res = await fetch(`/api/bookings?date=${dateStr}&key=${key}`)
         const data = await res.json()
         setBookings(data.bookings || [])
     }
@@ -94,7 +97,7 @@ export default function TimeSlots({ date }) {
     }
 
     const handleDelete = async (hour, name) => {
-        const password = prompt(`Masukkan password untuk hapus booking "${hour}" (${name}):`)
+        const password = prompt(`Masukkan password untuk hapus booking "${hour}"`)
         if (!password) return
 
         const res = await fetch('/api/bookings', {
@@ -114,6 +117,7 @@ export default function TimeSlots({ date }) {
     const getBookingInfo = (hour) => {
         const booking = bookings.find(b => b.hour === hour)
         if (!booking) return null
+        console.log(booking)
         if (showDetails) {
             return `${booking.name} (${booking.address})\n${booking.olahraga}`
         } else {
@@ -152,7 +156,7 @@ export default function TimeSlots({ date }) {
                                     </div>
                                 )}
                             </button>
-                            {isBooked && showDetails && (
+                            {isBooked && (
                                 <button
                                     onClick={() => handleDelete(hour, booking.name)}
                                     className="absolute top-0 right-0 text-red-600 text-xs p-1"

@@ -33,14 +33,13 @@ export async function POST(request) {
     }
 
     const today = new Date()
+    const todayStr = formatDateToLocal(today)
     const bookingDateStr = formatDateToLocal(bookingDate)
 
     const allowedWithSecret = getDateRange(today, 3, 7)     // 3 - 7 hari setelah hari ini → Dengan kunci
     const allowedWithoutSecret = getDateRange(today, 1, 2)  // 1 - 2 hari setelah hari ini → Tanpa kunci
 
     if (secret === SECRET_KEY) {
-        console.log(allowedWithSecret)
-        console.log(bookingDateStr)
         if (!allowedWithSecret.includes(bookingDateStr)) {
             return Response.json(
                 { error: `Dengan kunci, hanya bisa booking tanggal: ${allowedWithSecret.join(', ')}` },
@@ -52,6 +51,23 @@ export async function POST(request) {
             return Response.json(
                 { error: `Hanya bisa booking tanggal: ${allowedWithoutSecret.join(', ')}` },
                 { status: 403 }
+            )
+        }
+
+        // 🔸 Khusus tanpa kunci → cek apakah nama & alamat sudah booking untuk tanggal >= hari ini
+        console.log(todayStr)
+        const existingByName = await prisma.booking.findFirst({
+            where: {
+                date: { gt: todayStr },
+                name: { equals: name },
+                address: { equals: address },
+            },
+        })
+
+        if (existingByName) {
+            return Response.json(
+                { error: 'Nama & alamat sudah memiliki booking aktif, tunggu hingga booking sebelumnya lewat. Atau hapus booking aktif yang ada.' },
+                { status: 409 }
             )
         }
     } else {
