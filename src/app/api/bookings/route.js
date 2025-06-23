@@ -55,7 +55,6 @@ export async function POST(request) {
         }
 
         // 🔸 Khusus tanpa kunci → cek apakah nama & alamat sudah booking untuk tanggal >= hari ini
-        console.log(todayStr)
         const existingByName = await prisma.booking.findFirst({
             where: {
                 date: { gt: todayStr },

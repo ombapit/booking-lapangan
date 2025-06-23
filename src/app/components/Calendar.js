@@ -15,7 +15,7 @@ export default function Calendar({ onSelectDate }) {
                 <button
                     key={date.toDateString()}
                     onClick={() => onSelectDate(date)}
-                    className="bg-white p-2 rounded shadow text-center hover:bg-blue-100"
+                    className="bg-white p-2 rounded shadow text-center hover:bg-blue-100 text-fixed"
                 >
                     <div className="font-bold text-lg">{date.getDate()}</div>
                     <div className="text-xs">{date.toLocaleDateString('id-ID', { weekday: 'short' })}</div>

@@ -143,15 +143,15 @@ export default function TimeSlots({ date }) {
                                 onClick={() => !isBooked && toggleHour(hour)}
                                 disabled={isBooked}
                                 className={`p-4 w-full rounded shadow text-sm ${isBooked
-                                    ? 'bg-gray-300 cursor-not-allowed'
+                                    ? 'bg-gray-400 cursor-not-allowed dark:font-bold'
                                     : isSelected
-                                        ? 'bg-blue-500 text-white'
-                                        : 'bg-green-400 hover:bg-green-500'
+                                        ? 'bg-blue-500 text-white dark:font-bold'
+                                        : 'bg-green-400 hover:bg-green-500 dark:font-bold'
                                     }`}
                             >
                                 {hour}
                                 {booking && (
-                                    <div className="text-xs mt-1 text-gray-700 whitespace-pre-line">
+                                    <div className="text-xs mt-1 light:text-gray-700 whitespace-pre-line">
                                         {`${booking}`}
                                     </div>
                                 )}
@@ -179,19 +179,20 @@ export default function TimeSlots({ date }) {
             )}
 
             {showForm && (
-                <form onSubmit={handleSubmit} className="space-y-2 bg-white p-4 rounded shadow">
+                <form onSubmit={handleSubmit} className="space-y-2 p-4">
                     <div>
                         <label className="block text-sm font-semibold mb-1">Olahraga</label>
                         <select
                             value={form.olahraga}
                             onChange={(e) => setForm({ ...form, olahraga: e.target.value })}
                             required
-                            className="w-full border p-2 rounded"
+                            className="w-full border p-2 rounded bg-white text-black dark:bg-neutral-800 dark:text-white dark:border-neutral-600"
                         >
                             <option value="">Pilih Olahraga</option>
                             <option value="Basket">Basket</option>
                             <option value="Tenis">Tenis</option>
                         </select>
+
                     </div>
 
                     <div>
