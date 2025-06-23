@@ -1,6 +1,7 @@
 import prisma from '@/app/lib/prisma'
 
 const SECRET_KEY = 'LotusKey'
+const SECRET_KEY2 = 'LotusDonatur'
 
 // Format tanggal → WIB (UTC+7)
 function formatDateToLocal(date) {
@@ -39,7 +40,7 @@ export async function POST(request) {
     const allowedWithSecret = getDateRange(today, 1, 7)     // 1 - 7 hari setelah hari ini → Dengan kunci
     const allowedWithoutSecret = getDateRange(today, 1, 2)  // 1 - 2 hari setelah hari ini → Tanpa kunci
 
-    if (secret === SECRET_KEY) {
+    if (secret === SECRET_KEY || secret === SECRET_KEY2) {
         if (!allowedWithSecret.includes(bookingDateStr)) {
             return Response.json(
                 { error: `Dengan kunci, hanya bisa booking tanggal: ${allowedWithSecret.join(', ')}` },
@@ -133,8 +134,10 @@ export async function DELETE(request) {
         return Response.json({ error: 'Booking tidak ditemukan' }, { status: 404 })
     }
 
-    if (booking.password !== password) {
-        return Response.json({ error: 'Password salah' }, { status: 403 })
+    if (password !== process.env.NEXT_PUBLIC_KEY) {
+        if (booking.password !== password) {
+            return Response.json({ error: 'Password salah' }, { status: 403 })
+        }
     }
 
     await prisma.booking.delete({

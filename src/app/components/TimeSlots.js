@@ -23,8 +23,12 @@ export default function TimeSlots({ date }) {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search)
         const key = params.get('key')
-        if (key === 'LotusKey') {
-            setShowDetails(true)
+        if (key === process.env.NEXT_PUBLIC_KEY || key === process.env.NEXT_PUBLIC_KEY2) {
+            setForm({ ...form, secret: key })
+
+            if (key === process.env.NEXT_PUBLIC_KEY) {
+                setShowDetails(true)
+            }
         }
     }, [])
 
@@ -97,8 +101,13 @@ export default function TimeSlots({ date }) {
     }
 
     const handleDelete = async (hour, name) => {
-        const password = prompt(`Masukkan password untuk hapus booking "${hour}"`)
-        if (!password) return
+        let password = ''
+        if (form.secret !== 'LotusKey') {
+            password = prompt(`Masukkan password untuk hapus booking "${hour}"`)
+            if (!password) return
+        } else {
+            password = process.env.NEXT_PUBLIC_KEY
+        }
 
         const res = await fetch('/api/bookings', {
             method: 'DELETE',
@@ -117,7 +126,6 @@ export default function TimeSlots({ date }) {
     const getBookingInfo = (hour) => {
         const booking = bookings.find(b => b.hour === hour)
         if (!booking) return null
-        console.log(booking)
         if (showDetails) {
             return `${booking.name} (${booking.address})\n${booking.olahraga}`
         } else {
@@ -226,17 +234,6 @@ export default function TimeSlots({ date }) {
                             className="w-full border p-2 rounded"
                             placeholder="Password Booking, jangan lupa!!!"
                             required
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-semibold mb-1">Kunci Rahasia</label>
-                        <input
-                            type="password"
-                            value={form.secret}
-                            onChange={(e) => setForm({ ...form, secret: e.target.value })}
-                            className="w-full border p-2 rounded"
-                            placeholder="Optional, bisa dikosongkan"
                         />
                     </div>
 
