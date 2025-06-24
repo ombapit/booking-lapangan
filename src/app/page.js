@@ -15,12 +15,12 @@ export default function Home() {
   }
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] justify-items-center min-h-screen p-2 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col row-start-2 items-center w-full items-center">
-        <h1 className='font-bold'>Booking Lapangan Basket/Tenis</h1>
-        <h2 className='font-semibold'>Lotus Palace - PIK</h2>
+    <div className="min-h-screen flex flex-col items-center justify-between p-2 font-[family-name:var(--font-geist-sans)]">
+      <main className="flex flex-col items-center w-full flex-1">
+        <h1 className="font-bold text-lg">Booking Lapangan Basket/Tenis</h1>
+        <h2 className="font-semibold text-base">Lotus Palace - PIK</h2>
 
-        <div className="flex gap-4 items-center flex-col mt-6">
+        <div className="flex flex-col gap-4 items-center mt-6 w-full max-w-md">
           <Calendar onSelectDate={setSelectedDate} />
 
           {selectedDate && (
@@ -32,7 +32,8 @@ export default function Home() {
           )}
         </div>
       </main>
-      <footer className="row-start-3 gap-[24px] w-full flex justify-center text-red-500">
+
+      <footer className="text-xs text-red-500 py-2 text-center">
         Booking hanya bisa dilakukan 2 hari sebelum tanggal bermain.
       </footer>
     </div>
