@@ -37,7 +37,7 @@ export async function POST(request) {
     const todayStr = formatDateToLocal(today)
     const bookingDateStr = formatDateToLocal(bookingDate)
 
-    const allowedWithSecret = getDateRange(today, 1, 7)     // 1 - 7 hari setelah hari ini → Dengan kunci
+    const allowedWithSecret = getDateRange(today, 1, 6)     // 1 - 7 hari setelah hari ini → Dengan kunci
     const allowedWithoutSecret = getDateRange(today, 1, 2)  // 1 - 2 hari setelah hari ini → Tanpa kunci
 
     if (secret === SECRET_KEY || secret === SECRET_KEY2) {
