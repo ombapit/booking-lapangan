@@ -7,11 +7,11 @@ export default function Calendar({ onSelectDate }) {
     useEffect(() => {
         const today = new Date()
         const startDate = new Date(today)
-        startDate.setDate(today.getDate() + 1)
+        startDate.setDate(today.getDate())
 
         const params = new URLSearchParams(window.location.search)
         const key = params.get('key')
-        let num = 2;
+        let num = 3;
         if (key === process.env.NEXT_PUBLIC_KEY || key === process.env.NEXT_PUBLIC_KEY2) {
             num = 7;
         }
