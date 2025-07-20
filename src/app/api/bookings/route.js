@@ -54,24 +54,24 @@ export async function POST(request) {
                 { status: 403 }
             )
         }
-
-        // 🔸 Khusus tanpa kunci → cek apakah nama & alamat sudah booking untuk tanggal >= hari ini
-        const existingByName = await prisma.booking.findFirst({
-            where: {
-                date: { gt: todayStr },
-                name: { equals: name },
-                address: { equals: address },
-            },
-        })
-
-        if (existingByName) {
-            return Response.json(
-                { error: 'Nama & alamat sudah memiliki booking aktif, tunggu hingga booking sebelumnya lewat. Atau hapus booking aktif yang ada.' },
-                { status: 409 }
-            )
-        }
     } else {
         return Response.json({ error: 'Kunci rahasia salah' }, { status: 401 })
+    }
+
+    // cek apakah nama & alamat sudah booking untuk tanggal >= hari ini
+    const existingByName = await prisma.booking.findFirst({
+        where: {
+            date: { gt: todayStr },
+            name: { equals: name },
+            address: { equals: address },
+        },
+    })
+
+    if (existingByName) {
+        return Response.json(
+            { error: 'Nama & alamat sudah memiliki booking aktif, tunggu hingga booking sebelumnya lewat. Atau hapus booking aktif yang ada.' },
+            { status: 409 }
+        )
     }
 
     const existing = await prisma.booking.findMany({
