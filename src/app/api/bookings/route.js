@@ -58,10 +58,10 @@ export async function POST(request) {
         return Response.json({ error: 'Kunci rahasia salah' }, { status: 401 })
     }
 
-    // cek apakah nama & alamat sudah booking untuk tanggal >= hari ini
+    // cek apakah nama & alamat sudah booking untuk tanggal >= hari ini    
     const existingByName = await prisma.booking.findFirst({
         where: {
-            date: { gt: todayStr },
+            date: { equals: bookingDateStr },
             name: { equals: name },
             address: { equals: address },
         },
