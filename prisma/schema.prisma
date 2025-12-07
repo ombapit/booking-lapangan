@@ -17,4 +17,6 @@ model Booking {
   password   String
   secret    String
   createdAt DateTime @default(now())
+
+  @@map("booking")
 }

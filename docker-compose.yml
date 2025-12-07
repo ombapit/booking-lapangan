@@ -1,0 +1,25 @@
+services:
+  nextjs_app:
+    container_name: booking_lapangan
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    volumes:
+      - .:/app            # Mount seluruh folder host ke container
+      
+      # Trik: Mount node_modules ke volume anonim agar performa lebih cepat
+      # dan tidak konflik dengan OS host (misal host Windows vs container Linux)
+      #- /app/node_modules 
+      
+    env_file:
+      - .env
+      
+    # PERINTAH PENTING:
+    # 1. Cek apakah node_modules ada? Jika tidak, install.
+    # 2. Lalu jalankan server dev.
+    command: >
+      sh -c "if [ ! -d 'node_modules' ]; then npm install; fi && npm run build && npm start"
